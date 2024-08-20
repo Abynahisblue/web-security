@@ -25,5 +25,5 @@ jobs:
         run: pip install semgrep
 
       - name: Run Semgrep
-        run: semgrep --config=p/java/owasp-top-ten .
+        run: semgrep --config "p/owasp-top-ten" .
 
