@@ -3,6 +3,7 @@ package com.security.web_security.service;
 import com.security.web_security.httpRequest.UserRequest;
 import com.security.web_security.model.User;
 import com.security.web_security.repository.UserRepository;
+import com.security.web_security.utility.JwtUtil;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,10 +19,12 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     public Optional<User> findByUsername(String username) {
@@ -35,6 +38,14 @@ public class UserService implements UserDetailsService {
         user.setPassword(encodedPassword);
         userRepository.save(user);
         return user;
+    }
+    public String generateTokenForUser(User user) {
+        UserDetails userDetails = org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .authorities("USER")  // Add roles/authorities as needed
+                .build();
+        return jwtUtil.generateToken(userDetails);
     }
 
     public List<User> getAllUsers() {

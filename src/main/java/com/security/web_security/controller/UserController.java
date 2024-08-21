@@ -19,16 +19,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/public/register")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody UserRequest userRequest) {
-        if (userService.findByUsername(userRequest.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("Username already exists");
-        }
-
-        userService.registerUser(userRequest);
-        return ResponseEntity.ok("User registered successfully");
-    }
-
     @GetMapping("/private/users")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
