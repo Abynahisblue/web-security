@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 public class AuthenticationResponse {
     private User user;
-    @Getter
     private final String jwt;
 
     public AuthenticationResponse(String jwt) {
